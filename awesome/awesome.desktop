@@ -1,0 +1,9 @@
+# /usr/share/xsessions/awesome.desktop
+[Desktop Entry]
+Name=Awesome
+Comment=Log in awesome
+Exec=/usr/local/bin/awesome
+TryExec=/usr/local/bin/awesome
+# #cp /usr/local/share/awesome/icons/awesome64.png /usr/share/pixmaps/awesome.png
+Icon=awesome
+Type=Application

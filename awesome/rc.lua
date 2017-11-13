@@ -20,6 +20,12 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+-- @DOC_DEFAULT_APPLICATIONS@
+-- This is used later as the default terminal and editor to run.
+terminal = "sakura"
+editor = "emacs"
+editor_cmd = editor
+
 -- {{{ Error handling
 -- @DOC_ERROR_HANDLING@
 -- Check if awesome encountered an error during startup and fell back to
@@ -51,19 +57,14 @@ end
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "zenburn/theme.lua")
 
--- @DOC_DEFAULT_APPLICATIONS@
--- This is used later as the default terminal and editor to run.
-terminal = "sakura"
-editor = os.getenv("EDITOR") or "emacs"
-editor_cmd = terminal .. " " .. editor
-
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
 -- If you do not like this or do not have such a key,
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
-modkey = "Mod4"
-altkey = "Mod1"
+modkey  = "Mod4"
+altkey  = "Mod1"
+ctrlkey = "Control"
 
 -- @DOC_LAYOUT@
 -- Table of layouts to cover with awful.layout.inc, order matters.
@@ -104,20 +105,23 @@ end
 
 move_to_tags_menu = {}
 
-local function test_menu(c)
+local function client_menu_fn(cli)
    local instance = nil
-   return function ()
+	local cli = cli
+   return function (cli)
+		--cli = cli or client.focus
+		client.focus = cli
+		cli:raise()
       local terms = {}
-      local c = client.focus
-      local state = awful.client.floating.get(c)
+		local state = awful.client.floating.get(cli)
       local floating_item = {
          "",
          function ()
-            awful.client.floating.set(c, not state)
+            awful.client.floating.set(cli, not state)
             if state then
-               awful.titlebar.hide(c)
+               awful.titlebar.hide(cli)
             else
-               awful.titlebar.show(c)
+               awful.titlebar.show(cli)
             end
          end
       }
@@ -131,7 +135,7 @@ local function test_menu(c)
       table.insert(terms, {
                       "close",
                       function ()
-                         c:kill()
+                         cli:kill()
                       end
                           })
       if instance and instance.wibox.visible then
@@ -142,16 +146,6 @@ local function test_menu(c)
          instance:show()
       end
    end
-   --[[
-   terms[1] = {
-      "test",
-      function ()
-         awful.client.floating.set(c, true)
-      end,
-      nil
-      }]]
---      awful.titlebar.widget.closebutton(c)
-   --awful.menu(terms):show()
 end
 -- }}}
 
@@ -167,7 +161,9 @@ myawesomemenu = {
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "open terminal", terminal }
+									  { "open terminal", terminal },
+									  { "eclipse", "/home/ozo/develop/eclipse/eclipse"},
+									  { "luadevtools", "/home/ozo/develop/luadevtools/LuaDevelopmentTools"}
                                   }
                         })
 
@@ -223,7 +219,7 @@ local tasklist_buttons = gears.table.join(
                                               end
                                           end),
                      --awful.button({ }, 3, client_menu_toggle_fn()),
-                     awful.button({ }, 3, test_menu(c)),
+                     awful.button({ }, 3, client_menu_fn(c)),
                      awful.button({ }, 4, function ()
                                               awful.client.focus.byidx(1)
                                           end),
@@ -309,13 +305,19 @@ root.buttons(gears.table.join(
 -- {{{ Key bindings
 -- @DOC_GLOBAL_KEYBINDINGS@
 globalkeys = gears.table.join(
-    awful.key({ modkey,           }, "t", function() awful.util.spawn(terminal) end, {description="terminal", group="hotkey"}),
-    awful.key({ modkey,           }, "f", function() awful.util.spawn("firefox") end, {description="firefox", group="hotkey"}),
+	awful.key({ modkey,           }, "t",
+		function()
+			awful.util.spawn(terminal)
+		end, {description="terminal", group="hotkey"}),
+	awful.key({ modkey,           }, "f",
+		function()
+			awful.util.spawn("firefox")
+		end, {description="firefox", group="hotkey"}),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
+    awful.key({ ctrlkey, altkey   }, "Left",   awful.tag.viewprev,
               {description = "view previous", group = "tag"}),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
+    awful.key({ ctrlkey, altkey   }, "Right",  awful.tag.viewnext,
               {description = "view next", group = "tag"}),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
@@ -460,7 +462,7 @@ clientkeys = gears.table.join(
 -- Be careful: we use keycodes to make it work on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
 for i = 1, 9 do
-   table.insert(move_to_tags_menu, {tostring(i), function ()
+   table.insert(move_to_tags_menu, {tostring(i), function (cur_client)
                                        local tag = client.focus.screen.tags[i]
                                        client.focus:move_to_tag(tag)
                                                  end})
@@ -574,8 +576,8 @@ awful.rules.rules = {
     },
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { screen = 1, tag = "2" } },
+    { rule = { class = "Firefox" },
+       properties = { screen = 1, tag = "1" } },
 }
 -- }}}
 
@@ -610,7 +612,10 @@ client.connect_signal("request::titlebars", function(c)
             c:raise()
             awful.mouse.client.resize(c)
         end),
-        awful.button({ }, 3, test_menu(c))
+        awful.button({ }, 3,
+			  function()
+				  client_menu_fn(c)(c)
+		  end)
     )
 
     awful.titlebar(c) : setup {
@@ -637,8 +642,10 @@ client.connect_signal("request::titlebars", function(c)
             layout = wibox.layout.fixed.horizontal()
           },]]
        layout = wibox.layout.flex.horizontal
-                              }
-    awful.titlebar.hide(c)
+										}
+	 if not awful.client.floating.get(c) then
+		 awful.titlebar.hide(c)
+	 end
 end)
 
 -- Enable sloppy focus, so that focus follows mouse.
@@ -653,3 +660,5 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+awful.util.spawn("skypeforlinux")
