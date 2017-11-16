@@ -311,7 +311,7 @@ globalkeys = gears.table.join(
 		end, {description="terminal", group="hotkey"}),
 	awful.key({ modkey,           }, "f",
 		function()
-			awful.util.spawn("firefox")
+			awful.util.spawn("/home/ozo/bin/firefox/firefox")
 		end, {description="firefox", group="hotkey"}),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
@@ -577,7 +577,9 @@ awful.rules.rules = {
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
     { rule = { class = "Firefox" },
-       properties = { screen = 1, tag = "1" } },
+		properties = { screen = 1, tag = "1" } },
+	 { rule = { class = "Skype"},
+		properties = { screen = 1, tag = "9" } },
 }
 -- }}}
 
