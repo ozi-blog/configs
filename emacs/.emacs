@@ -1,3 +1,4 @@
+
 ;;;; тема настроенная в самом emacs'е, мне нравится =)
 (custom-set-variables
    '(ansi-color-faces-vector
@@ -102,3 +103,10 @@
 (add-hook 'lua-mode-hook
               (lambda () (setq indent-tabs-mode t
 			       tab-width lua-indent-level)))
+
+;; setup indent for python files
+(add-hook 'python-mode-hook
+      (lambda ()
+        (setq indent-tabs-mode t)
+        (setq tab-width 4)
+        (setq python-indent-offset 4)))
