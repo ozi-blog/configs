@@ -169,7 +169,10 @@ myawesomemenu = {
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
 									  { "open terminal", terminal },
 									  { "eclipse-cpp", eclipsecpp_bin},
-									  { "telegram", telegram_bin} }
+									  { "telegram", telegram_bin},
+									  { "reboot", "systemctl reboot"},
+									  { "poweroff", "systemctl poweroff"}
+									  }
 							  })
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
