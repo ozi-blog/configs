@@ -26,6 +26,9 @@ require("awful.hotkeys_popup.keys")
 terminal = "sakura"
 editor = "emacs"
 editor_cmd = editor
+telegram_bin = "/opt/telegram/Telegram"
+eclipsecpp_bin = "/home/oleg/ides/eclipse-cpp/eclipse"
+firefox_bin = "firefox"
 
 -- {{{ Error handling
 -- @DOC_ERROR_HANDLING@
@@ -165,8 +168,8 @@ myawesomemenu = {
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
 									  { "open terminal", terminal },
-									  { "eclipse", "/home/ozo/develop/eclipse/eclipse"},
-									  { "luadevtools", "/home/ozo/develop/luadevtools/LuaDevelopmentTools"} }
+									  { "eclipse-cpp", eclipsecpp_bin},
+									  { "telegram", telegram_bin} }
 							  })
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
@@ -233,7 +236,7 @@ end))
 local function set_wallpaper(s)
 	-- Wallpaper
 	if beautiful.wallpaper then
-		local wallpaper = "/home/ozo/images/wedding.jpg"
+		local wallpaper = "/home/oleg/images/wedding.jpg"
 		-- If wallpaper is a function, call it with the screen
 		if type(wallpaper) == "function" then
 			wallpaper = wallpaper(s)
@@ -327,7 +330,7 @@ globalkeys = gears.table.join(
 		end, {description="terminal", group="hotkey"}),
 	awful.key({ modkey,				}, "f",
 		function()
-			awful.util.spawn("/home/ozo/bin/firefox/firefox")
+			awful.util.spawn("firefox")
 		end, {description="firefox", group="hotkey"}),
 	awful.key({ modkey,				}, "s",		 hotkeys_popup.show_help,
 		{description="show help", group="awesome"}),
@@ -598,8 +601,12 @@ awful.rules.rules = {
 	-- Set Firefox to always map on the tag named "2" on screen 1.
 	{ rule = { class = "Firefox" },
 	  properties = { screen = 1, tag = "1" } },
+	{ rule = { class = "Eclipse"},
+	  properties = {screen = 1, tag = "2"  } },
 	{ rule = { class = "Skype"},
 	  properties = { screen = 1, tag = "9" } },
+	{ rule = { class = "Telegram"},
+	  properties = {screen = 1, tag = "9"  } },
 }
 -- }}}
 
@@ -683,5 +690,7 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-awful.util.spawn("skypeforlinux")
+awful.util.spawn(telegram_bin)
 awful.util.spawn("nm-applet")
+awful.util.spawn(eclipsecpp_bin)
+awful.util.spawn(firefox_bin)
