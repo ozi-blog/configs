@@ -21,3 +21,5 @@ map <C-o> :tabnew \| Explore<cr>
 map <C-w> :q<cr>
 let g:netrw_banner = 0
 let g:netrw_browse_split = 0
+au VimEnter * silent execute '!echo -ne "\e[6 q"' | set cul | redraw!
+au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
