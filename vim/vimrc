@@ -1,5 +1,10 @@
 " location ~/.vimrc
+" # mkdir -p ~/.vim/pack/themes/start
+" # cd ~/.vim/pack/themes/start
+" # git clone https://github.com/dracula/vim.git dracula
+packadd! dracula
 syntax on
+colorscheme dracula
 set number
 source $VIMRUNTIME/mswin.vim
 behave mswin
@@ -7,6 +12,7 @@ nnoremap <A-down> <C-W><C-J>
 nnoremap <A-up> <C-W><C-K>
 nnoremap <A-right> <C-W><C-L>
 nnoremap <A-left> <C-W><C-H>
+inoremap <C-k> <C-o>dd
 map <C-up> :tabr<cr>
 map <C-down> :tabl<cr>
 map <C-left> :tabp<cr>
