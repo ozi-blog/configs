@@ -23,6 +23,13 @@ map <C-right> :tabn<cr>
 map <C-o> :tabnew \| Explore<cr> 
 map <C-w> :q<cr>
 
+" problems with Ctrl+C Ctrl+V on some terminals
+vmap <C-c> y<Esc>i
+vmap <C-x> d<Esc>i
+map <C-v> pi
+imap <C-v> <Esc>pi
+imap <C-z> <Esc>ui
+
 " arrows can be used for selection
 vmap <Up> k
 vmap <Down> j
@@ -43,3 +50,4 @@ inoremap [ []<left>
 inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
+
