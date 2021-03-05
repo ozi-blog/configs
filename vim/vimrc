@@ -6,6 +6,9 @@ packadd! dracula
 syntax on
 colorscheme dracula
 set number
+set smartindent
+set tabstop=4
+set colorcolumn=80
 source $VIMRUNTIME/mswin.vim
 behave mswin
 nnoremap <A-down> <C-W><C-J>
@@ -19,7 +22,24 @@ map <C-left> :tabp<cr>
 map <C-right> :tabn<cr>
 map <C-o> :tabnew \| Explore<cr> 
 map <C-w> :q<cr>
+
+" arrows can be used for selection
+vmap <Up> k
+vmap <Down> j
+vmap <Left> h
+vmap <Right> l
+
 let g:netrw_banner = 0
 let g:netrw_browse_split = 0
 au VimEnter * silent execute '!echo -ne "\e[6 q"' | set cul | redraw!
 au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
+au BufNewFile,BufRead Jenkinsfile setf groovy
+
+
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O
