@@ -22,10 +22,17 @@
 
 URxvt.perl-ext-common: vtewheel,tabbed
 URxvt*font: xft:DejaVu Sans Mono:size=12
-URxvt.scrollstyle: xterm
-URxvt*scrollBar_right: true
-URxvt*scrollColor: #F8F8F2
-URxvt*troughColor: #282A36
+URxvt.scrollBar: false
+! If will want to see scrollbar sometime
+!URxvt.scrollstyle: xterm
+!URxvt*scrollBar_right: true
+!URxvt*scrollColor: #F8F8F2
+!URxvt*troughColor: #282A36
+! Fix problems with vim
+URxvt.keysym.S-Up             : \033[1;2A
+URxvt.keysym.S-Down           : \033[1;2B
+URxvt.keysym.S-Right          : \033[1;2C
+URxvt.keysym.S-Left           : \033[1;2D
 URxvt.tabbed.tabbar-fg: 5
 URxvt.tabbed.tabbar-bg: 8
 URxvt.tabbed.tab-fg: 2
